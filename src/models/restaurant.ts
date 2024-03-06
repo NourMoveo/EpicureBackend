@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-import { dishI } from "./dish";
-import { chefI } from "./chef";
+import { DishI } from "./dish";
+import { ChefI } from "./chef";
 
-export interface restaurantI extends Document {
+export interface RestaurantI extends Document {
   title: String;
   image: String;
   rating: Number;
@@ -13,8 +13,8 @@ export interface restaurantI extends Document {
   minPrice:Number;
   distance:Number;
   isPopular: Boolean;
-  chef: chefI;
-  dishes: dishI;
+  chef: ChefI;
+  dishes: DishI;
 
 }
 
@@ -28,11 +28,11 @@ const RestaurantSchema: Schema = new Schema({
   minPrice: { type: Number, required: true },
   rating: { type: Number, required: true },
   isPopular: { type: Boolean, required: true, default: false },
-  chef: { type: Schema.Types.ObjectId, ref: "Chef", required: true },
-  dishes: [{ type: Schema.Types.ObjectId, ref: "Dish", required: true }],
+  chef: { type: Schema.Types.ObjectId, ref: "Chef" },
+  dishes: [{ type: Schema.Types.ObjectId, ref: "Dish"}],
 
 });
 
-const Restaurant = mongoose.model<restaurantI>("Restaurant", RestaurantSchema);
+const Restaurant = mongoose.model<RestaurantI>("Restaurant", RestaurantSchema);
 
 export default Restaurant;

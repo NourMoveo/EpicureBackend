@@ -1,14 +1,15 @@
 import mongoose, { Schema, Document } from "mongoose";
 
-import { restaurantI } from "./restaurant";
+import { RestaurantI } from "./restaurant";
 
-export interface chefI extends Document {
+export interface ChefI extends Document {
   fName: string;
   lName: string;
   image: string;
   description: string;
-  restaurants: restaurantI[];
+  restaurant: RestaurantI;
   isChefOfTheWeek: boolean;
+  isMostViewedChef: boolean;
 }
 
 const ChefSchema: Schema = new Schema({
@@ -16,12 +17,12 @@ const ChefSchema: Schema = new Schema({
   lName: { type: String, required: true },
   image: { type: String, required: true },
   description: { type: String, required: true },
-  restaurants: [
-    { type: Schema.Types.ObjectId, ref: "Restaurant", required: true },
-  ],
+  restaurant:
+    { type: Schema.Types.ObjectId, ref: "Restaurant" },
   isChefOfTheWeek: { type: Boolean, required: true, default: false },
+  isMostViewedChef: { type: Boolean, required: true, default: false },
 });
 
-const Chef = mongoose.model<chefI>("Chef", ChefSchema);
+const Chef = mongoose.model<ChefI>("Chef", ChefSchema);
 
 export default Chef;

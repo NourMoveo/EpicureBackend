@@ -1,12 +1,17 @@
-import express from "express";
+import express, { Router, Request, Response } from "express";
 import DishController from "../controllers/DishC";
+import registerRoutes from "./GenericRouter";  
 
-const router = express.Router();
+const dishRouter = Router();
+import DishModel from "../models/dish"; // Adjust the path if necessary
 
-router.post("/", DishController.createDish);
-router.get("/", DishController.getAllDishes);
-router.get("/:id", DishController.getDishById);
-router.put("/:id", DishController.updateDish);
-router.delete("/:id", DishController.deleteDish);
+const dishController = new DishController(DishModel);
 
-export default router;
+// Additional routes specific to dishes
+dishRouter.get("/signature", dishController.getSignatureDishes.bind(dishController));
+dishRouter.get("/type/:type", dishController.getAllDishesByType.bind(dishController));
+
+// Generic routes
+export const dishRoutes = registerRoutes(dishController, "dishes");
+dishRouter.use("/", dishRoutes);
+export default dishRouter;

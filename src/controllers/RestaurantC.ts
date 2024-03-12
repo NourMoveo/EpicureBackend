@@ -1,58 +1,45 @@
 import { Request, Response } from "express";
-import RestaurantService from "../services/RestaurantS";
+import { Model } from "mongoose";
+import { RestaurantI } from "../models/restaurant";
+import RestaurantService from "../services/RestaurantS"; // Corrected import path
+import GenericController from "./GenericController";
 
-class RestaurantController {
-  static async createRestaurant(req: Request, res: Response) {
-    try {
-      const newRestaurant = await RestaurantService.createRestaurant(req.body);
-      res.status(201).json(newRestaurant);
-    } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
-    }
+class RestaurantController extends GenericController<RestaurantI> {
+  constructor(model: Model<RestaurantI>) {
+    super(model);
   }
-
-  static async getAllRestaurants(req: Request, res: Response) {
+  getFilteredRestaurants = async (req: Request, res: Response): Promise<void> => {
     try {
-      const restaurants = await RestaurantService.getAllRestaurants();
-      res.status(200).json(restaurants);
-    } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
-    }
-  }
+      // Parse query parameters into boolean values
+      const isPopular = req.query.isPopular === "true";
+      const isNew = req.query.isNew === "true";
 
-  static async getRestaurantById(req: Request, res: Response) {
-    try {
-      const restaurantId = req.params.id;
-      const restaurant = await RestaurantService.getRestaurantById(restaurantId);
-      if (!restaurant) {
-        res.status(404).json({ error: "Restaurant not found" });
-        return;
+      // Call the service method with the parsed filter
+      const filteredRestaurants = await (this.service as RestaurantService).getFilteredRestaurants({ isPopular, isNew });
+
+      if (filteredRestaurants.length === 0) {
+        res.status(404).json({ error: "No restaurants found for the provided filter" });
+      } else {
+        res.status(200).json(filteredRestaurants);
       }
-      res.status(200).json(restaurant);
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }
   }
 
-  static async updateRestaurant(req: Request, res: Response) {
+  getOpenNowRestaurants = async (req: Request, res: Response): Promise<void> => {
     try {
-      const restaurantId = req.params.id;
-      const updatedRestaurant = await RestaurantService.updateRestaurant(restaurantId, req.body);
-      if (!updatedRestaurant) {
-        res.status(404).json({ error: "Restaurant not found" });
-        return;
-      }
-      res.status(200).json(updatedRestaurant);
+      const openNowRestaurants = await (this.service as RestaurantService).getOpenNowRestaurants();
+      res.status(200).json(openNowRestaurants);
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }
   }
 
-  static async deleteRestaurant(req: Request, res: Response) {
+  groupRestaurantsByRating = async (req: Request, res: Response): Promise<void> => {
     try {
-      const restaurantId = req.params.id;
-      await RestaurantService.deleteRestaurant(restaurantId);
-      res.status(204).end();
+      const groupedRestaurants = await (this.service as RestaurantService).groupRestaurantsByRating();
+      res.status(200).json(groupedRestaurants);
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }

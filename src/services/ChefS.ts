@@ -1,50 +1,34 @@
-import ChefModel, { ChefI } from "../models/chef";
+import  { ChefI } from "../models/chef";
+import {  Model, FilterQuery } from 'mongoose';
+import GenericService from './GenericService';
 
-class ChefService {
-  async createChef(chefData: ChefI): Promise<ChefI> {
-    try {
-      const newChef = new ChefModel(chefData);
-      const savedChef = await newChef.save();
-      return savedChef;
-    } catch (error) {
-      throw new Error(`Error creating chef: ${error}`);
-    }
+class ChefService extends GenericService<ChefI> {
+  constructor( model: Model<ChefI>) {
+    super(model);
   }
-
-  async getAllChefs(): Promise<ChefI[]> {
+  async getFilteredChefs(filter: { isChefOfTheWeek?: boolean; isNew?: boolean; isMostViewed?: boolean }): Promise<ChefI[]> {
     try {
-      const chefs = await ChefModel.find();
-      return chefs;
+      const query: FilterQuery<ChefI> = {};
+  
+      if (filter.isChefOfTheWeek !== undefined) {
+        query.isChefOfTheWeek = filter.isChefOfTheWeek;
+      }
+  
+      if (filter.isNew !== undefined) {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        query.chefStartDate = { $gte: oneYearAgo };
+      }
+  
+      if (filter.isMostViewed !== undefined) {
+        query.isMostViewedChef = filter.isMostViewed;
+      }
+  
+      return await this.model.find(query).exec();
     } catch (error) {
       throw new Error(`Error fetching chefs: ${error}`);
     }
-  }
-
-  async getChefById(id: string): Promise<ChefI | null> {
-    try {
-      const chef = await ChefModel.findById(id);
-      return chef;
-    } catch (error) {
-      throw new Error(`Error fetching chef: ${error}`);
-    }
-  }
-
-  async updateChef(id: string, chefData: Partial<ChefI>): Promise<ChefI | null> {
-    try {
-      const updatedChef = await ChefModel.findByIdAndUpdate(id, chefData, { new: true });
-      return updatedChef;
-    } catch (error) {
-      throw new Error(`Error updating chef: ${error}`);
-    }
-  }
-
-  async deleteChef(id: string): Promise<void> {
-    try {
-      await ChefModel.findByIdAndDelete(id);
-    } catch (error) {
-      throw new Error(`Error deleting chef: ${error}`);
-    }
-  }
+  }  
 }
 
-export default new ChefService();
+export default ChefService;

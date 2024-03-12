@@ -7,9 +7,10 @@ export interface ChefI extends Document {
   lName: string;
   image: string;
   description: string;
-  restaurant: RestaurantI;
+  restaurant: RestaurantI[];
   isChefOfTheWeek: boolean;
   isMostViewedChef: boolean;
+  chefStartDate:Date;
 }
 
 const ChefSchema: Schema = new Schema({
@@ -18,9 +19,10 @@ const ChefSchema: Schema = new Schema({
   image: { type: String, required: true },
   description: { type: String, required: true },
   restaurant:
-    { type: Schema.Types.ObjectId, ref: "Restaurant" },
+    [{ type: Schema.Types.ObjectId, ref: "Restaurant" }],
   isChefOfTheWeek: { type: Boolean, required: true, default: false },
   isMostViewedChef: { type: Boolean, required: true, default: false },
+  chefStartDate: { type: Date, required: true },
 });
 
 const Chef = mongoose.model<ChefI>("Chef", ChefSchema);

@@ -5,8 +5,11 @@ import RestaurantService from "../services/RestaurantS"; // Corrected import pat
 import GenericController from "./GenericController";
 
 class RestaurantController extends GenericController<RestaurantI> {
+  private restaurantService: RestaurantService;
+
   constructor(model: Model<RestaurantI>) {
     super(model);
+    this.restaurantService = new RestaurantService(model);
   }
   getFilteredRestaurants = async (req: Request, res: Response): Promise<void> => {
     try {

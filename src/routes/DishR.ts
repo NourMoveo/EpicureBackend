@@ -1,17 +1,43 @@
-import express, { Router, Request, Response } from "express";
+import express, { Router } from "express";
 import DishController from "../controllers/DishC";
-import registerRoutes from "./GenericRouter";  
-
-const dishRouter = Router();
 import DishModel from "../models/dish"; // Adjust the path if necessary
 
+const dishRouter = Router();
 const dishController = new DishController(DishModel);
 
-// Additional routes specific to dishes
-dishRouter.get("/signature", dishController.getSignatureDishes.bind(dishController));
-dishRouter.get("/type/:type", dishController.getAllDishesByType.bind(dishController));
+// Route to create a new dish
+dishRouter.post("/", (req, res) => {
+    dishController.create(req, res);
+});
 
-// Generic routes
-export const dishRoutes = registerRoutes(dishController, "dishes");
-dishRouter.use("/", dishRoutes);
+// Route to get all dishes
+dishRouter.get("/", (req, res) => {
+    dishController.getAll(req, res);
+});
+
+// Route to update a dish
+dishRouter.put("/:id", (req, res) => {
+    dishController.update(req, res);
+});
+
+// Route to delete a dish
+dishRouter.delete("/:id", (req, res) => {
+    dishController.delete(req, res);
+});
+
+// Route to get signature dishes
+dishRouter.get("/signature", (req, res) => {
+    dishController.getSignatureDishes(req, res);
+});
+
+// Route to get dishes by type
+dishRouter.get("/type/:type", (req, res) => {
+    dishController.getAllDishesByType(req, res);
+});
+
+// Route to get dish by ID
+dishRouter.get("/:id", (req, res) => {
+    dishController.getById(req, res);
+});
+
 export default dishRouter;

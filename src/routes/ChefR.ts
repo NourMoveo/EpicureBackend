@@ -1,17 +1,37 @@
 import express, { Router } from "express";
 import ChefController from "../controllers/ChefC";
-import registerRoutes from "./GenericRouter";  
-
-
-const chefRouter = Router();
 import ChefModel from "../models/chef"; // Adjust the path if necessary
 
+const chefRouter = Router();
 const chefController = new ChefController(ChefModel);
 
-// Additional routes specific to chefs
-chefRouter.get("/filter", chefController.getFilteredChefs.bind(chefController));
+// Route to create a new chef
+chefRouter.post("/", (req, res) => {
+    chefController.create(req, res);
+});
 
-// Generic routes
-export const chefRoutes = registerRoutes(chefController, "chefs");
-chefRouter.use("/", chefRoutes);
+// Route to get all chefs
+chefRouter.get("/", (req, res) => {
+    chefController.getAll(req, res);
+});
+
+// Route to get a chef by ID
+chefRouter.get("/:id", (req, res) => {
+    chefController.getById(req, res);
+});
+
+// Route to update a chef
+chefRouter.put("/:id", (req, res) => {
+    chefController.update(req, res);
+});
+
+// Route to delete a chef
+chefRouter.delete("/:id", (req, res) => {
+    chefController.delete(req, res);
+});
+
+// Additional routes specific to chefs
+chefRouter.get("/filter", (req, res) => {
+    chefController.getFilteredChefs(req, res);
+});
 export default chefRouter;

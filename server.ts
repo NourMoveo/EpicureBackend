@@ -1,30 +1,30 @@
 import express from "express";
-import mongoose from "mongoose";
 import cors from "cors";
-import { PORT, mongoDBURL } from "./config";
-import { restaurantRoutes } from "./src/routes/RestaurantR";
-import { dishRoutes } from "./src/routes/DishR";
-import { chefRoutes } from "./src/routes/ChefR";
+import dotenv from "dotenv";
+import { connectToDB } from "./dataBase";
+import restaurantRoutes from "./src/routes/RestaurantR";
+import dishRoutes from "./src/routes/DishR";
+import chefRoutes from "./src/routes/ChefR";
 
-const app = express();
+dotenv.config();
+
+const app: express.Application = express();
+const port: number = parseInt(process.env.PORT as string, 10) || 3000;
 
 app.use(cors());
 app.use(express.json());
 
 // Register routes
-app.use('/api', restaurantRoutes);
-app.use('/api', chefRoutes);
-app.use('/api', dishRoutes);
+app.use('/api/restaurants', restaurantRoutes);
+app.use('/api/dishes', dishRoutes);
+app.use('/api/chefs', chefRoutes);
 
-
-mongoose
-  .connect(mongoDBURL)
+connectToDB()
   .then(() => {
-    console.log("App connected to database");
-    app.listen(PORT, () => {
-      console.log(`Server is listening at http://localhost:${PORT}`);
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
     });
   })
   .catch((error) => {
-    console.error("Error connecting to database:", error);
+    console.error("Failed to connect to the database", error);
   });

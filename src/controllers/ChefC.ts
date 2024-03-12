@@ -5,8 +5,11 @@ import ChefService from "../services/ChefS";
 import GenericController from "./GenericController";
 
 class ChefController extends GenericController<ChefI> {
+  private chefService: ChefService;
+
   constructor(model: Model<ChefI>) {
     super(model);
+    this.chefService = new ChefService(model);
   }
 
   async getFilteredChefs(req: Request, res: Response) {

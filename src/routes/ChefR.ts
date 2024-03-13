@@ -15,11 +15,6 @@ chefRouter.get("/", (req, res) => {
     chefController.getAll(req, res);
 });
 
-// Route to get a chef by ID
-chefRouter.get("/:id", (req, res) => {
-    chefController.getById(req, res);
-});
-
 // Route to update a chef
 chefRouter.put("/:id", (req, res) => {
     chefController.update(req, res);
@@ -31,7 +26,21 @@ chefRouter.delete("/:id", (req, res) => {
 });
 
 // Additional routes specific to chefs
-chefRouter.get("/filter", (req, res) => {
-    chefController.getFilteredChefs(req, res);
+chefRouter.get('/chef-of-the-week', (req, res) => {
+    chefController.getChefOfTheWeek(req, res);
 });
+
+chefRouter.get('/new', (req, res) => {
+    chefController.getNewChefs(req, res);
+});
+
+chefRouter.get('/most-viewed', (req, res) => {
+    chefController.getMostViewedChefs(req, res);
+});
+
+chefRouter.get("/:id", (req, res) => {
+    chefController.getById(req, res);
+});
+
+
 export default chefRouter;

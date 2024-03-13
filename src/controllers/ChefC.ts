@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
-import { ChefI } from "../models/chef"; // Assuming this is the Chef model
+import { ChefI } from "../models/chef";
 import ChefService from "../services/ChefS";
 import GenericController from "./GenericController";
 
@@ -12,22 +12,28 @@ class ChefController extends GenericController<ChefI> {
     this.chefService = new ChefService(model);
   }
 
-  async getFilteredChefs(req: Request, res: Response) {
+  async getChefOfTheWeek(req: Request, res: Response): Promise<void> {
     try {
-      const chefService = this.service as ChefService;
-      const filter: any = {}; // Define filter object
-      if (req.query.isChefOfTheWeek) {
-        filter.isChefOfTheWeek = req.query.isChefOfTheWeek === 'true'; // Convert string to boolean
-      }
-      if (req.query.isNew) {
-        filter.isNew = req.query.isNew === 'true'; // Convert string to boolean
-      }
-      if (req.query.isMostViewed) {
-        filter.isMostViewed = req.query.isMostViewed === 'true'; // Convert string to boolean
-      }
-      
-      const filteredChefs = await chefService.getFilteredChefs(filter);
-      res.status(200).json(filteredChefs);
+      const chefOfTheWeek = await this.chefService.getChefOfTheWeek();
+      res.status(200).json(chefOfTheWeek);
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  async getNewChefs(req: Request, res: Response): Promise<void> {
+    try {
+      const newChefs = await this.chefService.getNewChefs();
+      res.status(200).json(newChefs);
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  async getMostViewedChefs(req: Request, res: Response): Promise<void> {
+    try {
+      const mostViewedChefs = await this.chefService.getMostViewedChefs();
+      res.status(200).json(mostViewedChefs);
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });
     }

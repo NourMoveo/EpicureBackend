@@ -1,7 +1,5 @@
 import express, { Router } from "express";
-import RestaurantController from "../controllers/RestaurantC"; // Corrected import path
-import { Model } from "mongoose";
-import { RestaurantI } from "../models/restaurant";
+import RestaurantController from "../controllers/RestaurantC";
 import RestaurantModel from "../models/restaurant";
 
 const restaurantRouter = Router();

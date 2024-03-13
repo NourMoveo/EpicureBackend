@@ -16,11 +16,11 @@ class DishService extends GenericService<DishI> {
   }
   async getAllDishesByType(type: string): Promise<DishI[]> {
     try {
-      return await this.model.find({ type }).exec();
+        return await this.model.find({ type }).exec();
     } catch (error) {
-      throw new Error(`Error fetching ${type.toLowerCase()} dishes: ${error}`);
+        throw new Error(`Error fetching ${type.toLowerCase()} dishes: ${error}`);
     }
-  }
+}
   
 }
 

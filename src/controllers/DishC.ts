@@ -21,15 +21,15 @@ class DishController extends GenericController<DishI> {
     }
   }
 
-  async getAllDishesByType(req: Request, res: Response) {
+  async getAllDishesByType(req: Request, res: Response): Promise<void> {
     try {
-      const type = req.params.type;
-      const dishes = await this.dishService.getAllDishesByType(type);
-      res.json(dishes);
+        const type = req.params.type;
+        const dishes = await this.dishService.getAllDishesByType(type);
+        res.json(dishes);
     } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+        res.status(500).json({ error: (error as Error).message });
     }
-  }
+}
 }
 
 export default DishController;

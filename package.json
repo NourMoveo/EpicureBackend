@@ -1,0 +1,41 @@
+{
+  "name": "epicurebackend",
+  "version": "1.0.0",
+  "description": "Welcome to the backend development phase of Epicure! This section focuses on the server-side development for our sophisticated food ordering website showcasing Tel Aviv's top restaurants.",
+  "main": "index.js",
+  "scripts": {
+    "build": "rimraf dist && npx tsc",
+    "prestart": "npm run build",
+    "start": "node dist/index.js",
+    "preserve": "npm run build",
+    "dev": "ts-node-dev --respawn --transpile-only server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "bcrypt": "^5.1.1",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
+    "date-fns-tz": "^2.0.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.18.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.2.1",
+    "nodemon": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/jsonwebtoken": "^9.0.6",
+    "nodeman": "^1.1.2",
+    "ts-node-dev": "^2.0.0"
+  },
+  "compilerOptions": {
+    "jsx": "react"
+  }
+}

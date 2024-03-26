@@ -21,19 +21,29 @@ class RestaurantController extends GenericController<RestaurantI> {
     }
   }
  
-  getFilteredRestaurants = async (req: Request, res: Response): Promise<void> => {
+
+  getPopularRestaurants = async (req: Request, res: Response): Promise<void> => {
     try {
-      // Parse query parameters into boolean values
-      const isPopular = req.query.isPopular === "true";
-      const isNew = req.query.isNew === "true";
+      const popularRestaurants = await this.restaurantService.getPopularRestaurants();
 
-      // Call the service method with the parsed filter
-      const filteredRestaurants = await this.restaurantService.getFilteredRestaurants({ isPopular, isNew });
-
-      if (filteredRestaurants.length === 0) {
-        res.status(404).json({ error: "No restaurants found for the provided filter" });
+      if (popularRestaurants.length === 0) {
+        res.status(404).json({ error: "No popular restaurants found" });
       } else {
-        res.status(200).json(filteredRestaurants);
+        res.status(200).json(popularRestaurants);
+      }
+    } catch (error) {
+      res.status(500).json({ error: (error as Error).message });
+    }
+  }
+
+  getNewRestaurants = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const newRestaurants = await this.restaurantService.getNewRestaurants();
+
+      if (newRestaurants.length === 0) {
+        res.status(404).json({ error: "No new restaurants found" });
+      } else {
+        res.status(200).json(newRestaurants);
       }
     } catch (error) {
       res.status(500).json({ error: (error as Error).message });

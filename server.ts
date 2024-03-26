@@ -5,6 +5,8 @@ import { connectToDB } from "./dataBase";
 import restaurantRoutes from "./src/routes/RestaurantR";
 import dishRoutes from "./src/routes/DishR";
 import chefRoutes from "./src/routes/ChefR";
+import userRoutes from "./src/routes/UserR";
+import orderRoutes from "./src/routes/OrderR";
 
 dotenv.config();
 
@@ -18,6 +20,8 @@ app.use(express.json());
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/dishes', dishRoutes);
 app.use('/api/chefs', chefRoutes);
+app.use('/api/users', userRoutes );
+app.use('/api/orders', orderRoutes );
 
 connectToDB()
   .then(() => {

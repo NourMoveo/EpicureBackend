@@ -15,7 +15,7 @@ export interface RestaurantI extends Document {
   distance: Number;
   isPopular: Boolean;
   chef: ChefI;
-  dishes: DishI[];
+  dishes: string[];
 }
 
 

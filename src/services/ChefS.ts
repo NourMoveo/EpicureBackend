@@ -8,9 +8,9 @@ class ChefService extends GenericService<ChefI> {
     }
 
 
-    async getChefOfTheWeek(): Promise<ChefI[]> {
+    async getChefOfTheWeek(): Promise<ChefI> {
       try {
-          return await this.model.find({ isChefOfTheWeek: true }).exec();
+          return (await this.model.find({ isChefOfTheWeek: true }).exec())[0];
       } catch (error) {
           throw new Error(`Error fetching chef of the week: ${error}`);
       }

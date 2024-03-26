@@ -31,25 +31,33 @@ class RestaurantService extends GenericService<RestaurantI> {
   }
 
  
-  async getFilteredRestaurants(filter: { isPopular?: boolean; isNew?: boolean }): Promise<RestaurantI[]> {
+  async getPopularRestaurants(): Promise<RestaurantI[]> {
     try {
-      const query: any = {};
-  
-      if (filter.isPopular !== undefined) {
-        query.isPopular = filter.isPopular;
-      }
-  
-      if (filter.isNew !== undefined) {
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        query.establishedTime = { $gte: oneYearAgo };
-      }
-  
+      const query: any = {
+        isPopular: true // Filter for popular restaurants
+      };
+    
       return await this.model.find(query).exec();
     } catch (error) {
-      throw new Error(`Error fetching restaurants: ${error}`);
+      throw new Error(`Error fetching popular restaurants: ${error}`);
     }
   }
+  
+  async getNewRestaurants(): Promise<RestaurantI[]> {
+    try {
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+      
+      const query: any = {
+        establishedTime: { $gte: oneYearAgo } // Filter for restaurants established within the last year
+      };
+    
+      return await this.model.find(query).exec();
+    } catch (error) {
+      throw new Error(`Error fetching new restaurants: ${error}`);
+    }
+  }
+  
 
   async groupRestaurantsByRating(): Promise<RestaurantI[][]> {
     try {

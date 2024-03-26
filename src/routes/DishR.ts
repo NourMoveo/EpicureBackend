@@ -1,12 +1,13 @@
 import express, { Router } from "express";
 import DishController from "../controllers/DishC";
 import DishModel from "../models/dish"; // Adjust the path if necessary
+import {  isAdminLoggedIn } from "../middleware/userAuthentication";
 
 const dishRouter = Router();
 const dishController = new DishController(DishModel);
 
 // Route to create a new dish
-dishRouter.post("/", (req, res) => {
+dishRouter.post("/",  isAdminLoggedIn, (req, res) => {
     dishController.create(req, res);
 });
 
@@ -16,12 +17,12 @@ dishRouter.get("/", (req, res) => {
 });
 
 // Route to update a dish
-dishRouter.put("/:id", (req, res) => {
+dishRouter.put("/:id",  isAdminLoggedIn, (req, res) => {
     dishController.update(req, res);
 });
 
 // Route to delete a dish
-dishRouter.delete("/:id", (req, res) => {
+dishRouter.delete("/:id",  isAdminLoggedIn, (req, res) => {
     dishController.delete(req, res);
 });
 

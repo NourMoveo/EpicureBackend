@@ -46,17 +46,29 @@ class UserController extends GenericController<UserI> {
     }
   }
   
-  addOrder = async (req: Request, res: Response): Promise<void> => {
+ addOrder= async (req: Request, res: Response): Promise<void> => {
     try {
-      const userId = req.params.id;
-      const newOrderData: OrderI = req.body;
-      await this.userService.addOrder(userId, newOrderData);
-      console.log
-      res.status(200).json({ message: 'Order added successfully' });
+        const { email, newOrderData } = req.body; // Assuming email and newOrderData are sent in the request body
+
+        await this.userService.addOrder(email, newOrderData);
+
+        res.status(201).json({ message: 'Order added successfully' });
     } catch (error) {
-      res.status(500).json({ error: (error as Error).message });
+        console.error('Error adding order:', error);
+        res.status(500).json({ error: 'Error adding order' });
     }
+};
+
+getOrdersHistory = async (req: Request, res: Response): Promise<void> => {
+  try {
+      const { email } = req.params; // Assuming email is passed as a URL parameter
+      const orders = await this.userService.getOrdersHistory(email);
+      res.status(200).json({ orders });
+  } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).json({ error: 'Error fetching orders' });
   }
+};
 }
 
 export default UserController;

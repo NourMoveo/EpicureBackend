@@ -11,7 +11,10 @@ class UserService extends GenericService<UserI> {
   }
   async signUp(userData: UserI): Promise<void> {
     try {
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      console.log('User data:', userData);
+      const saltRounds = 10;
+      console.log('Password:', userData.password); // Add this line to check the password
+      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
       const newUser = new this.model({
         ...userData,
         password: hashedPassword,
@@ -22,6 +25,7 @@ class UserService extends GenericService<UserI> {
       throw new Error('Error creating user');
     }
   }
+  
   
   async userLogin(email: string, password: string): Promise<string> {
     try {
@@ -63,23 +67,40 @@ class UserService extends GenericService<UserI> {
       throw new Error('Error during login');
     }
   }
-  async addOrder(userId: string, newOrderData: OrderI): Promise<void> {
-    try {
-      const newOrder = new Order(newOrderData);
-      await newOrder.save();
-      
-      const user = await User.findById(userId);
-      if (!user) {
-        throw new Error('User not found');
-      }
+  async addOrder(email: string, newOrderData: OrderI): Promise<void> {
+      try {
+          const newOrder = new Order(newOrderData);
+          await newOrder.save();
   
-      user.orders.push(newOrder);
-      await user.save();
-    } catch (error) {
-      console.log(newOrderData);
-      throw new Error('Error adding order to user');
-    }
+          // Find the user by email
+          const user = await User.findOne({ email });
+          if (!user) {
+              throw new Error('User not found');
+          }
+  
+          user.orders.push(newOrder);
+          await user.save();
+      } catch (error) {
+          console.error('Error adding order to user:', error);
+          throw new Error('Error adding order to user');
+      }
   }
+
+  async getOrdersHistory(email: string): Promise<OrderI[]> {
+    try {
+        // Find the user by email
+        const user = await User.findOne({ email }).populate('orders');
+        if (!user) {
+            throw new Error('User not found');
+        }
+        return user.orders;
+    } catch (error) {
+        console.error('Error fetching orders by email:', error);
+        throw new Error('Error fetching orders by email');
+    }
+}
+
+  
   
 
   
